@@ -96,3 +96,4 @@ class Rate(models.Model):
     rate = models.IntegerField()
     projcet = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(Register, on_delete=models.CASCADE)
+    
