@@ -8,7 +8,7 @@ class Register(models.Model):
     last_name = models.CharField(max_length = 30)
     email = models.EmailField(max_length = 50 , unique=True)
     password = models.CharField(max_length = 200)
-    phone = models.CharField(max_length = 11 , unique=True, null=True)
+    phone = models.CharField(max_length = 10 , unique=True, null=True)
     is_active = models.BooleanField(default=False)
     is_superuser=models.BooleanField(default=False)
     profile_img = models.ImageField(verbose_name="photo", upload_to='user/images/' ,default='default.jpg')
@@ -30,10 +30,11 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         Register.objects.create( email=instance.email , password=instance.password , is_superuser=instance.is_superuser , is_active=instance.is_active ,first_name=instance.first_name , last_name=instance.last_name)
 
-
 # @receiver(pre_save, sender=User)
 # def create_profile(sender, instance, **kwargs):
 #     if(sender.id==instance.id):
 #         Register.objects.update( id=instance.id,email=instance.email , password=instance.password , is_superuser=instance.is_superuser , is_active=instance.is_active ,first_name=instance.first_name , last_name=instance.last_name)
 #     else:
 #         Register.objects.create( id=instance.id,email=instance.email , password=instance.password , is_superuser=instance.is_superuser , is_active=instance.is_active ,first_name=instance.first_name , last_name=instance.last_name)
+
+

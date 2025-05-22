@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
 from distutils.log import error
 from django import forms
@@ -39,7 +35,7 @@ class SignupForm(forms.ModelForm):
         "class": "form-control"
     }))
     phone = forms.CharField(label="phone number", validators=[RegexValidator(
-        '^01[0125][0-9]{8}$', message="Enter a Valid Egyption Phone Number")], widget=forms.TextInput(attrs={
+        '^[6-9]\d{9}$', message="Enter a Valid Phone Number")], widget=forms.TextInput(attrs={
             "placeholder": "Phone Number",
             "class": "form-control"
         }))
@@ -70,7 +66,6 @@ class SignupForm(forms.ModelForm):
         fields = ('first_name', 'last_name',  'email',
                   'password', 'confirmPassword', 'phone', 'image')
 
-
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=200, help_text='Required',widget=forms.EmailInput(attrs={
         "placeholder": "Email",
@@ -80,7 +75,6 @@ class LoginForm(forms.Form):
         "placeholder": "Password",
         "class": "form-control"
     }))
-
 
 class EditProfileForm(forms.ModelForm):
     first_name = forms.CharField(
@@ -104,7 +98,7 @@ class EditProfileForm(forms.ModelForm):
         max_length=10,
         )
     phone = forms.CharField(label="phone number", validators=[RegexValidator(
-        '^01[0125][0-9]{8}$', message="Enter a Valid Egyption Phone Number")], widget=forms.TextInput(attrs={
+        '^[6-9]\d{9}$', message="Enter a Valid Phone Number")], widget=forms.TextInput(attrs={
             "placeholder": "Phone Number",
             "class": "form-control"
         }))
@@ -141,7 +135,6 @@ class EditProfileForm(forms.ModelForm):
                 'class': 'form-control'
             }
     ))
-
 
     def clean(self):
         errors = {}
@@ -198,3 +191,5 @@ class DeleteAccountForm(forms.Form):
         "placeholder": "Password",
         "class": "form-control"
     }))
+
+

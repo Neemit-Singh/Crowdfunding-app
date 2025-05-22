@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 
 from multiprocessing import context
 from django.template import loader , RequestContext
@@ -33,40 +28,44 @@ from django.core.mail import send_mail
 
 from apps.home.views import getUser
   
-def user_login (request ):
-    if 'user_id' not in request.session :
+from django.contrib.auth.hashers import check_password
+
+def user_login(request):
+    if 'user_id' not in request.session:
         msg = None
         if request.method == "POST":
-            form = LoginForm( request.POST)
-           
+            form = LoginForm(request.POST)
+
             if form.is_valid():
                 email = form.cleaned_data['email']
                 password = form.cleaned_data['password']
-                encryptpassword=make_password(password)
 
                 try:
-                    user = Register.objects.get(email=email , password=encryptpassword)
-                except (ObjectDoesNotExist):
-                    user = None                    
-                if user is not None:
-                    if  user.is_active:
+                    user = Register.objects.get(email=email)
+                except Register.DoesNotExist:
+                    user = None
+
+                if user is not None and check_password(password, user.password):  # Use check_password()
+                    if user.is_active:
                         login(request, user)
                         user.last_login = timezone.now()
-                        user.is_login= True
+                        user.is_login = True
                         user.save()
                         request.session['user_id'] = user.id
                         msg = f"You are now logged in as {user.first_name}"
-                        return redirect("/" )
+                        return redirect("/")
                     else:
-                        msg= "please check your email to activate it !!"
+                        msg = "Please check your email to activate your account!"
                 else:
-                    msg = "user doesn't exist "
+                    msg = "Invalid email or password."
             else:
-                msg = 'Invalid email or password.'
+                msg = "Invalid email or password."
+
         form = LoginForm()
-        return render(request=request, template_name="accounts/login.html", context={"login_form":form , "msg": msg})
+        return render(request, "accounts/login.html", {"login_form": form, "msg": msg})
+    
     else:
-        return redirect("/" )
+        return redirect("/")
 
 
 
@@ -145,7 +144,6 @@ def activate(request, uidb64, token):
     
 
 
-
 def user_logout(request ):
     try:        
         del request.session['user_id']
@@ -153,7 +151,6 @@ def user_logout(request ):
     except KeyError:
         print("you must login ")
     return redirect("login" )
-
 
 def EditProfile(request):
     msg = None
@@ -189,7 +186,6 @@ def EditProfile(request):
                 user_object.birthdate=form.cleaned_data['birthdate']
                 user_object.facebook_profile=form.cleaned_data['facebook_profile']
 
-
                 user_object.save()
                 return redirect( 'profile'  )
         else:
@@ -197,7 +193,6 @@ def EditProfile(request):
         return render(request, 'profile/editProfile.html', {'form': form ,"msg" :msg , "user" :user_object})
     else:
         return redirect("/" )
-
 
 def profile (request):
     if 'user_id'  in request.session :
@@ -323,3 +318,5 @@ def deleteAccount(request):
                 return render(request=request, template_name="accounts/Delete_account.html", context={"form":form , "user":user})
     else:
         return redirect('login')
+
+
