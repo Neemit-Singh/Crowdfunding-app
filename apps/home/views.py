@@ -1,4 +1,4 @@
-# from asyncio.windows_events import NULL
+
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
